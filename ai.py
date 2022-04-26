@@ -4,6 +4,7 @@ import speech_recognition as speech_r #pip install SpeechRecognition
 import wikipedia # pip install wikipedia
 import pyjokes # pip install pyjokes
 
+
 machine = pyttsx3.init()
 
 def speak(text): # text to speech
