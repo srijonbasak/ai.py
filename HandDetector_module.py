@@ -21,24 +21,23 @@ class handDetect():
     rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     #prosses hand in img
-    result = self.hands.process(rgb_img)
+    self.result = self.hands.process(rgb_img)
 
-    if result.multi_hand_landmarks:
-      for handLm in result.multi_hand_landmarks:
+    if self.result.multi_hand_landmarks:
+      for handLm in self.result.multi_hand_landmarks:
         if draw:
           self.mpDraw.draw_landmarks(img, handLm, self.np_hands.HAND_CONNECTIONS)
     return img
     
-    def findposition(self, img, handno=0, draw = False):
-      result = self.hands.process(rgb_img)
-      landmarklist = []
-      if result.multi_hand_landmarks:
-        myhand = result.multi_hand_landmarks[handno]
-        for id, lm in enumerate(myhand.landmarks):
-          h, w, c = img.shape
-          cx, cy = int(lm.x*w), int(lm.y*h)
-          landmarklist.append([id,cx,cy])
-      return landmarklist
+  def findposition(self, img, handno = 0 , draw = False):
+    landmarklist = []
+    if self.result.multi_hand_landmarks:
+      myhand = self.result.multi_hand_landmarks[handno]
+      for id, lm in enumerate(myhand.landmark):
+        h, w, c = img.shape
+        cx, cy = int(lm.x*w), int(lm.y*h)
+        landmarklist.append([id,cx,cy])
+    return landmarklist
 
 def main():
   cap = cv2.VideoCapture(0)#webcam
@@ -50,7 +49,9 @@ def main():
       #read image
       success, img = cap.read()
       img = detector.findhands(img)
-
+      lmlist = detector.findposition(img)
+      if len(lmlist) != 0:
+        print(lmlist)
       #fps
       Currentime = time.time()
       fps = 1/(Currentime-previoustime)
